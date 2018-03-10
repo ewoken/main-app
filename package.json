@@ -5,12 +5,16 @@
   "dependencies": {
     "antd": "^3.2.2",
     "babel-core": "^6.0.0",
+    "es6-error": "^4.1.1",
     "history": "^4.7.2",
+    "i18next": "^10.5.0",
+    "i18next-browser-languagedetector": "^2.1.0",
     "immutable": "^3.8.2",
     "prop-types": "^15.6.1",
     "ramda": "^0.25.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-i18next": "^7.5.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
@@ -19,7 +23,9 @@
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
     "redux-form": "^7.2.3",
-    "validator": "^9.4.1"
+    "redux-thunk": "^2.2.0",
+    "validator": "^9.4.1",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
     "babel-plugin-import": "^1.6.5",

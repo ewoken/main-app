@@ -1,0 +1,101 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Input, Button, Form, Icon, Alert } from 'antd';
+import { Field, reduxForm, SubmissionError } from 'redux-form';
+import { push } from 'react-router-redux';
+
+import wrapInput, { tailFormItemLayout } from '../../utils/wrapInput';
+import { logIn } from '../../api/user-store';
+import { setLoggedUser } from '../../store/loggedUser';
+import { handleApiError } from '../../utils/errors';
+
+const FormItem = Form.Item;
+const SIGN_UP_FORM = 'LOG_IN_FORM';
+const WrappedInput = wrapInput(Input);
+
+function LogInComponent(props) {
+  const { handleSubmit, submitting, t, error } = props;
+  return (
+    <Form className="LogInComponent">
+      {error && (
+        <FormItem>
+          <Alert
+            message="Something goes wrong"
+            type="warning"
+            description={error}
+          />
+        </FormItem>
+      )}
+      <Field
+        className="LogInComponent__email"
+        label={t('Email')}
+        name="email"
+        component={WrappedInput}
+        type="email"
+        prefix={<Icon type="user" className="LogInComponent__emailIcon" />}
+        placeholder={t('email')}
+        required
+      />
+      <Field
+        className="LogInComponent__password"
+        label={t('Password')}
+        name="password"
+        component={WrappedInput}
+        type="password"
+        prefix={<Icon type="lock" className="LogInComponent__passwordIcon" />}
+        placeholder={t('password')}
+        required
+      />
+      <FormItem {...tailFormItemLayout}>
+        <Button type="primary" loading={submitting} onClick={handleSubmit}>
+          {t('logIn')}
+        </Button>
+      </FormItem>
+    </Form>
+  );
+}
+
+LogInComponent.defaultProps = {
+  error: null,
+};
+
+LogInComponent.propTypes = {
+  t: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  error: PropTypes.string,
+};
+
+function validate(user, { t }) {
+  const errors = {};
+
+  if (!user.email) {
+    errors.email = t('Required');
+  }
+
+  if (!user.password) {
+    errors.password = t('Required');
+  }
+
+  return errors;
+}
+
+const LogInForm = reduxForm({
+  form: SIGN_UP_FORM,
+  validate,
+  onSubmit(credentials) {
+    return logIn(credentials).catch(
+      handleApiError(error => {
+        throw new SubmissionError({
+          _error: error.message,
+        });
+      }),
+    );
+  },
+  onSubmitSuccess(user, dispatch) {
+    dispatch(setLoggedUser(user));
+    dispatch(push('/signedUp'));
+  },
+})(LogInComponent);
+
+export default LogInForm;

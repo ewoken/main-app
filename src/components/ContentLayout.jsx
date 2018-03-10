@@ -17,15 +17,11 @@ function ContentLayout(props) {
   );
 }
 
-ContentLayout.defaultProps = {
-  children: [],
-};
-
 ContentLayout.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.element),
     PropTypes.element,
-  ]),
+  ]).isRequired,
 };
 
 export default ContentLayout;

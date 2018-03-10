@@ -1,19 +1,26 @@
 import { USER_STORE_URL } from '../../config';
+import fetchApi from '../../utils/fetchApi';
 
-export async function signUp(user) {
-  // TODO utils
-  const result = await fetch(`${USER_STORE_URL}/users/signUp`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(user),
-  });
-  const body = await result.json();
-  if (!result.ok) {
-    throw new Error(`${result.status} ${result.statusText} ${body.error}`);
-  }
-  return body;
+function fetchUserStore(url, options) {
+  return fetchApi(`${USER_STORE_URL}${url}`, options);
 }
 
-export const plop = 1;
+export function signUp(user) {
+  return fetchUserStore('/users/signUp', {
+    method: 'POST',
+    body: JSON.stringify(user),
+  });
+}
+
+export function logIn(credentials) {
+  return fetchUserStore('/users/logIn', {
+    method: 'POST',
+    body: JSON.stringify(credentials),
+  });
+}
+
+export function getLoggedUser() {
+  return fetchUserStore('/users/me', {
+    method: 'GET',
+  });
+}

@@ -1,9 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { translate } from 'react-i18next';
 
 import { Menu } from 'antd';
 
-function MainMenu() {
+function MainMenu(props) {
+  const { t } = props;
   return (
     <div className="MainMenu">
       <Menu
@@ -24,12 +27,12 @@ function MainMenu() {
       >
         <Menu.Item key="logIn">
           <Link href="/#/logIn" to="/logIn">
-            Log In
+            {t('logIn')}
           </Link>
         </Menu.Item>
         <Menu.Item key="signUp">
           <Link href="/#/signUp" to="/signUp">
-            Sign Up
+            {t('signUp')}
           </Link>
         </Menu.Item>
       </Menu>
@@ -37,4 +40,8 @@ function MainMenu() {
   );
 }
 
-export default MainMenu;
+MainMenu.propTypes = {
+  t: PropTypes.func.isRequired,
+};
+
+export default translate('MainMenu')(MainMenu);
