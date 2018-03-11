@@ -26,3 +26,9 @@ export function getLoggedUser() {
     method: 'GET',
   });
 }
+
+export function logOut() {
+  return fetchUserStore('/users/logOut', {
+    method: 'POST',
+  });
+}

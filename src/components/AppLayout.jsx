@@ -8,6 +8,7 @@ import { getLocation } from 'react-router-redux';
 import MainMenu from './MainMenu';
 import ContentLayout from './ContentLayout';
 import ErrorHandler from './ErrorHandler';
+import Loader from './Loader';
 
 import SignUpView from '../views/signUp/SignUpView';
 import LogInView from '../views/logIn/LogInView';
@@ -21,53 +22,49 @@ import {
 
 const { Header, Content } = Layout;
 
-class AppLayout extends React.PureComponent {
-  componentWillMount() {
-    this.props.getLoggedUser();
-  }
-
-  render() {
-    return (
-      this.props.isLoggedUserLoaded && (
-        <Layout>
-          <Header className="AppLayout__header">
-            <MainMenu />
-          </Header>
-          <Content className="AppLayout__content">
-            <ContentLayout location={this.props.location}>
-              <ErrorHandler>
-                {this.props.isLogged ? (
-                  <Switch location={this.props.location}>
-                    <Route
-                      exact
-                      path="/logged"
-                      component={() => <div>Logged In</div>}
-                    />
-                    <Route exact path="/error" render={ErrorView} />
-                    <Route render={() => <Redirect to="/logged" />} />
-                  </Switch>
-                ) : (
-                  <Switch location={this.props.location}>
-                    <Route exact path="/signUp" component={SignUpView} />
-                    <Route
-                      exact
-                      path="/signedUp"
-                      component={() => {
-                        return <div>Signed up</div>;
-                      }}
-                    />
-                    <Route exact path="/logIn" component={LogInView} />
-                    <Route exact path="/error" render={ErrorView} />
-                    <Route render={() => <Redirect to="/signUp" />} />
-                  </Switch>
-                )}
-              </ErrorHandler>
-            </ContentLayout>
-          </Content>
-        </Layout>
-      )
-    );
-  }
+function AppLayout(props) {
+  return (
+    <Loader
+      load={props.getLoggedUser}
+      isLoaded={props.isLoggedUserLoaded}
+      spinSize="large"
+    >
+      <Layout>
+        <Header className="AppLayout__header">
+          <MainMenu />
+        </Header>
+        <Content className="AppLayout__content">
+          <ContentLayout>
+            <ErrorHandler>
+              {props.isLogged ? (
+                <Switch location={props.location}>
+                  <Route
+                    exact
+                    path="/logged"
+                    component={() => <div>Logged In</div>}
+                  />
+                  <Route exact path="/error" render={ErrorView} />
+                  <Route render={() => <Redirect to="/logged" />} />
+                </Switch>
+              ) : (
+                <Switch location={props.location}>
+                  <Route exact path="/signUp" component={SignUpView} />
+                  <Route
+                    exact
+                    path="/signedUp"
+                    component={() => <div>Signed up</div>}
+                  />
+                  <Route exact path="/logIn" component={LogInView} />
+                  <Route exact path="/error" render={ErrorView} />
+                  <Route render={() => <Redirect to="/signUp" />} />
+                </Switch>
+              )}
+            </ErrorHandler>
+          </ContentLayout>
+        </Content>
+      </Layout>
+    </Loader>
+  );
 }
 
 AppLayout.propTypes = {

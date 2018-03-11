@@ -16,12 +16,18 @@
   justify-content: space-between;
 }
 
-.MainMenu__leftPart {
+.MainMenu__logo {
   font-size: 20pt;
   line-height: 64px;
 }
 
-.MainMenu__rightPart {
+.MainMenu__logInSignUp {
+  line-height: 64px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.MainMenu__logged {
   line-height: 64px;
   display: flex;
   justify-content: flex-end;

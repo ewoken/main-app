@@ -1,4 +1,8 @@
-import { getLoggedUser as getLoggedUserFromApi } from '../api/user-store/index';
+import { push } from 'react-router-redux';
+import {
+  getLoggedUser as getLoggedUserFromApi,
+  logOut as logOutRequest,
+} from '../api/user-store/index';
 import { handleApiError } from '../utils/errors';
 
 const LOGGED_USER = 'LOGGED_USER';
@@ -73,10 +77,19 @@ export function getLoggedUser() {
   };
 }
 
+export function logOut() {
+  return function dispatchLogOut(dispatch) {
+    return logOutRequest().then(() => {
+      dispatch(receiveGetLoggedUser(null, null));
+      dispatch(push('/'));
+    });
+  };
+}
+
 /* export function getLoggedUserIsLoadingSelector(state) {
   return state.loggedUser.loading;
-}
+} */
 
 export function getLoggedUserErrorSelector(state) {
   return state.loggedUser.error;
-} */
+}

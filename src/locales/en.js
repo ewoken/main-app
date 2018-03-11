@@ -9,7 +9,9 @@ const en = {
     signUp: 'Sign Up',
     'Something goes wrong': 'Something goes wrong',
   },
-  MainMenu: {},
+  MainMenu: {
+    'Log out': 'Log out',
+  },
   LoginView: {
     'Bad credentials': 'Bad credentials',
   },
