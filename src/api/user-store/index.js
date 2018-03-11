@@ -11,6 +11,7 @@ export function signUp(user) {
     body: JSON.stringify(user),
   });
 }
+signUp.EXISTING_EMAIL = 'EXISTING_EMAIL';
 
 export function logIn(credentials) {
   return fetchUserStore('/users/logIn', {
@@ -18,6 +19,7 @@ export function logIn(credentials) {
     body: JSON.stringify(credentials),
   });
 }
+logIn.BAD_CREDENTIALS = 'BAD_CREDENTIALS';
 
 export function getLoggedUser() {
   return fetchUserStore('/users/me', {

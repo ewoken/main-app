@@ -1,3 +1,4 @@
+import { mergeDeepRight } from 'ramda';
 import {
   DefaultError,
   ServerError,
@@ -15,18 +16,20 @@ const VALIDATION_ERROR = 'VALIDATION_ERROR';
  * @param {Object} options
  */
 async function fetchApi(url, options) {
-  const result = await fetch(url, {
-    ...options,
-    credentials: 'include',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      ...options.headers,
+  const mergedOptions = mergeDeepRight(
+    {
+      credentials: 'include',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
     },
-  });
-  const body = await result.json();
+    options,
+  );
+  const result = await fetch(url, mergedOptions);
   if (!result.ok) {
     if (result.status === 400) {
+      const body = await result.json();
       switch (body.error.errorCode) {
         case BAD_JSON:
           throw new DefaultError('Bad json', options.body);
@@ -36,13 +39,10 @@ async function fetchApi(url, options) {
           throw DomainError.fromObject(body.error);
       }
     } else {
-      throw new ServerError(
-        `${result.status} ${result.statusText} ${body.error}`,
-        { requestId: body.error },
-      );
+      throw new ServerError(`${result.status} ${result.statusText}`);
     }
   }
-  return body;
+  return result.json();
 }
 
 export default fetchApi;

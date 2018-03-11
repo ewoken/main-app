@@ -7,14 +7,18 @@ const en = {
     Required: 'Required',
     logIn: 'Log In',
     signUp: 'Sign Up',
+    'Something goes wrong': 'Something goes wrong',
   },
   MainMenu: {},
-  LoginView: {},
+  LoginView: {
+    'Bad credentials': 'Bad credentials',
+  },
   SignUpView: {
-    confirmPassword: 'Confirm password',
+    'Confirm password': 'Confirm password',
     'Should be a valid email': 'Should be a valid email',
     'Should have 6 characters at least': 'Should have 6 characters at least',
     'Does not match the password': 'Does not match the password',
+    'Email already used': 'Email already used',
   },
 };
 

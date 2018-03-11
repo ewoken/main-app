@@ -1,4 +1,7 @@
 import ExtendableError from 'es6-error';
+import { SubmissionError } from 'redux-form';
+
+export { SubmissionError } from 'redux-form';
 
 export class DefaultError extends ExtendableError {
   constructor(message, payload) {
@@ -69,6 +72,31 @@ export function handleApiError(handler) {
     if (error instanceof ApiError) {
       console.error('API error', error); // eslint-disable-line no-console
       handler(error.toObject());
+    } else {
+      throw error;
+    }
+  };
+}
+
+export function handleSubmitError(t, handler) {
+  return function submitErrorHandler(error) {
+    // TODO
+    if (error instanceof ApiError) {
+      console.error('API error', error); // eslint-disable-line no-console
+    }
+    if (error instanceof DomainError) {
+      handler(error.toObject());
+    } else if (
+      error instanceof ValidationError ||
+      error instanceof ServerError
+    ) {
+      throw new SubmissionError({
+        _error: {
+          message: t('Something goes wrong'),
+          description: error.message,
+          type: 'error',
+        },
+      });
     }
     throw error;
   };

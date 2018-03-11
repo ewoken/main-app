@@ -8,7 +8,7 @@ import { push } from 'react-router-redux';
 
 import wrapInput, { tailFormItemLayout } from '../../utils/wrapInput';
 import { signUp } from '../../api/user-store';
-import { handleApiError } from '../../utils/errors';
+import { handleSubmitError } from '../../utils/errors';
 
 const FormItem = Form.Item;
 const SIGN_UP_FORM = 'SIGN_UP_FORM';
@@ -18,9 +18,9 @@ function SignUpComponent(props) {
   const { handleSubmit, submitting, t, error } = props;
   return (
     <Form className="SignUpComponent">
-      {error && ( // TODO factor + trad
+      {error && (
         <FormItem>
-          <Alert message="Warning" type="warning" description={error} />
+          <Alert {...error} />
         </FormItem>
       )}
       <Field
@@ -45,7 +45,7 @@ function SignUpComponent(props) {
       />
       <Field
         className="SignUpComponent__passwordConfirmation"
-        label={t('confirmPassword')}
+        label={t('Confirm password')}
         name="passwordConfirmation"
         component={WrappedInput}
         type="password"
@@ -68,7 +68,11 @@ SignUpComponent.defaultProps = {
 
 SignUpComponent.propTypes = {
   t: PropTypes.func.isRequired,
-  error: PropTypes.string,
+  error: PropTypes.shape({
+    message: PropTypes.string,
+    description: PropTypes.string,
+    type: PropTypes.oneOf(['warning', 'error']),
+  }),
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
 };
@@ -100,12 +104,17 @@ function validate(user, { t }) {
 const SignUpForm = reduxForm({
   form: SIGN_UP_FORM,
   validate,
+  persistentSubmitErrors: true,
   // asyncChangeFields: ['email'], TODO
-  onSubmit(user) {
+  onSubmit(user, dispatch, { t }) {
     const userInput = omit(['passwordConfirmation'], user);
     return signUp(userInput).catch(
-      handleApiError(error => {
-        throw new SubmissionError({ _error: error.message });
+      handleSubmitError(t, domainError => {
+        if (domainError.errorCode === signUp.EXISTING_EMAIL) {
+          throw new SubmissionError({
+            email: t('Email already used'),
+          });
+        }
       }),
     );
   },

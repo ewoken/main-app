@@ -7,7 +7,7 @@ import { push } from 'react-router-redux';
 import wrapInput, { tailFormItemLayout } from '../../utils/wrapInput';
 import { logIn } from '../../api/user-store';
 import { setLoggedUser } from '../../store/loggedUser';
-import { handleApiError } from '../../utils/errors';
+import { handleSubmitError } from '../../utils/errors';
 
 const FormItem = Form.Item;
 const SIGN_UP_FORM = 'LOG_IN_FORM';
@@ -19,11 +19,7 @@ function LogInComponent(props) {
     <Form className="LogInComponent">
       {error && (
         <FormItem>
-          <Alert
-            message="Something goes wrong"
-            type="warning"
-            description={error}
-          />
+          <Alert {...error} />
         </FormItem>
       )}
       <Field
@@ -63,11 +59,15 @@ LogInComponent.propTypes = {
   t: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  error: PropTypes.string,
+  error: PropTypes.shape({
+    message: PropTypes.string,
+    description: PropTypes.string,
+    type: PropTypes.oneOf(['warning', 'error']),
+  }),
 };
 
-function validate(user, { t }) {
-  const errors = {};
+function validate(user, { t, error }) {
+  const errors = { _error: error };
 
   if (!user.email) {
     errors.email = t('Required');
@@ -83,12 +83,19 @@ function validate(user, { t }) {
 const LogInForm = reduxForm({
   form: SIGN_UP_FORM,
   validate,
-  onSubmit(credentials) {
+  persistentSubmitErrors: true,
+  onSubmit(credentials, dispatch, { t }) {
     return logIn(credentials).catch(
-      handleApiError(error => {
-        throw new SubmissionError({
-          _error: error.message,
-        });
+      handleSubmitError(t, domainError => {
+        if (domainError.errorCode === logIn.BAD_CREDENTIALS) {
+          throw new SubmissionError({
+            _error: {
+              type: 'warning',
+              message: t('Bad credentials'),
+              description: undefined,
+            },
+          });
+        }
       }),
     );
   },
