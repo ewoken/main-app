@@ -5,11 +5,14 @@ import { Field, reduxForm, SubmissionError } from 'redux-form';
 import { Link } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import validator from 'validator';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
 
 import wrapInput, { tailFormItemLayout } from '../../utils/wrapInput';
 import { logIn } from '../../api/user-store';
 import { setLoggedUser } from '../../store/loggedUser';
 import { handleSubmitError } from '../../utils/errors';
+import { queryObjectSelector } from '../../store/selectors';
 
 const FormItem = Form.Item;
 const LOG_IN_FORM = 'LOG_IN_FORM';
@@ -45,6 +48,7 @@ function LogInComponent(props) {
         required
       />
       <Link to="/forgotPassword" href="/#/forgotPassword">
+        {/* TODO position in page */}
         Forgot Password
       </Link>
       <FormItem {...tailFormItemLayout}>
@@ -87,7 +91,7 @@ function validate(user, { t, error }) {
   return errors;
 }
 
-const LogInForm = reduxForm({
+const form = reduxForm({
   form: LOG_IN_FORM,
   validate,
   persistentSubmitErrors: true,
@@ -110,6 +114,12 @@ const LogInForm = reduxForm({
     dispatch(setLoggedUser(user));
     dispatch(push('/signedUp'));
   },
-})(LogInComponent);
+});
+
+const connection = connect(state => ({
+  initialValues: queryObjectSelector(state),
+}));
+
+const LogInForm = compose(connection, form)(LogInComponent);
 
 export default LogInForm;

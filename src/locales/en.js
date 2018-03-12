@@ -28,6 +28,8 @@ const en = {
   },
   ResetPasswordView: {
     'Reset password': 'Reset password',
+    'Invalid or expired token': 'Invalid or expired token',
+    'Resend email': 'Resend email',
   },
 };
 

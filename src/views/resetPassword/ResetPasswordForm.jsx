@@ -5,9 +5,10 @@ import { Field, reduxForm, SubmissionError } from 'redux-form';
 import { push } from 'react-router-redux';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
+import queryString from 'qs';
 
 import wrapInput, { tailFormItemLayout } from '../../utils/wrapInput';
-import { resetPassword } from '../../api/user-store';
+import { resetPassword, sendResetPasswordEmail } from '../../api/user-store';
 import { handleSubmitError } from '../../utils/errors';
 import { queryObjectSelector } from '../../store/selectors';
 
@@ -65,7 +66,7 @@ ResetPasswordComponent.propTypes = {
   t: PropTypes.func.isRequired,
   error: PropTypes.shape({
     message: PropTypes.string,
-    description: PropTypes.string,
+    description: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     type: PropTypes.oneOf(['warning', 'error']),
   }),
   handleSubmit: PropTypes.func.isRequired,
@@ -94,22 +95,34 @@ const form = reduxForm({
   form: RESET_PASSWORD_FORM,
   validate,
   persistentSubmitErrors: true,
-  onSubmit({ password }, dispatch, { t, resetPasswordToken }) {
+  onSubmit({ password }, dispatch, { t, resetPasswordToken, email }) {
     return resetPassword({ password, token: resetPasswordToken }).catch(
       handleSubmitError(t, domainError => {
         if (domainError.errorCode === resetPassword.INVALID_EXPIRED_TOKEN) {
           throw new SubmissionError({
             _error: {
               type: 'warning',
-              message: domainError.message, // TODO
+              message: t('Invalid or expired token'),
+              description: (
+                <div>
+                  <Button onClick={() => sendResetPasswordEmail({ email })}>
+                    {t('Resend email')}
+                  </Button>
+                </div>
+              ),
             },
           });
         }
       }),
     );
   },
-  onSubmitSuccess(result, dispatch) {
-    dispatch(push('/logIn'));
+  onSubmitSuccess(result, dispatch, { email }) {
+    dispatch(
+      push({
+        pathname: '/logIn',
+        search: `?${queryString.stringify({ email })}`,
+      }),
+    );
   },
 });
 const connection = connect(state => ({
