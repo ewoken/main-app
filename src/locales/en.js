@@ -8,6 +8,10 @@ const en = {
     logIn: 'Log In',
     signUp: 'Sign Up',
     'Something goes wrong': 'Something goes wrong',
+    'Should be a valid email': 'Should be a valid email',
+    'Confirm password': 'Confirm password',
+    'Should have 6 characters at least': 'Should have 6 characters at least',
+    'Does not match the password': 'Does not match the password',
   },
   MainMenu: {
     'Log out': 'Log out',
@@ -16,11 +20,14 @@ const en = {
     'Bad credentials': 'Bad credentials',
   },
   SignUpView: {
-    'Confirm password': 'Confirm password',
-    'Should be a valid email': 'Should be a valid email',
-    'Should have 6 characters at least': 'Should have 6 characters at least',
-    'Does not match the password': 'Does not match the password',
     'Email already used': 'Email already used',
+  },
+  ForgotPasswordView: {
+    'Send email': 'Send email',
+    'Email sent': 'Email sent',
+  },
+  ResetPasswordView: {
+    'Reset password': 'Reset password',
   },
 };
 

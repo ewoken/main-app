@@ -13,6 +13,8 @@ import Loader from './Loader';
 import SignUpView from '../views/signUp/SignUpView';
 import LogInView from '../views/logIn/LogInView';
 import ErrorView from '../views/error/ErrorView';
+import ForgotPasswordView from '../views/forgotPassword/ForgotPasswordView';
+import ResetPasswordView from '../views/resetPassword/ResetPasswordView';
 
 import {
   getLoggedUser,
@@ -55,6 +57,16 @@ function AppLayout(props) {
                     component={() => <div>Signed up</div>}
                   />
                   <Route exact path="/logIn" component={LogInView} />
+                  <Route
+                    exact
+                    path="/forgotPassword"
+                    component={ForgotPasswordView}
+                  />
+                  <Route
+                    exact
+                    path="/resetPassword"
+                    component={ResetPasswordView}
+                  />
                   <Route exact path="/error" render={ErrorView} />
                   <Route render={() => <Redirect to="/signUp" />} />
                 </Switch>

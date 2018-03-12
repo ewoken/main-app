@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Button, Form, Icon, Alert } from 'antd';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
+import { Link } from 'react-router-dom';
 import { push } from 'react-router-redux';
+import validator from 'validator';
 
 import wrapInput, { tailFormItemLayout } from '../../utils/wrapInput';
 import { logIn } from '../../api/user-store';
@@ -10,7 +12,7 @@ import { setLoggedUser } from '../../store/loggedUser';
 import { handleSubmitError } from '../../utils/errors';
 
 const FormItem = Form.Item;
-const SIGN_UP_FORM = 'LOG_IN_FORM';
+const LOG_IN_FORM = 'LOG_IN_FORM';
 const WrappedInput = wrapInput(Input);
 
 function LogInComponent(props) {
@@ -42,6 +44,9 @@ function LogInComponent(props) {
         placeholder={t('password')}
         required
       />
+      <Link to="/forgotPassword" href="/#/forgotPassword">
+        Forgot Password
+      </Link>
       <FormItem {...tailFormItemLayout}>
         <Button type="primary" loading={submitting} onClick={handleSubmit}>
           {t('logIn')}
@@ -71,6 +76,8 @@ function validate(user, { t, error }) {
 
   if (!user.email) {
     errors.email = t('Required');
+  } else if (!validator.isEmail(user.email)) {
+    errors.email = t('Should be a valid email');
   }
 
   if (!user.password) {
@@ -81,7 +88,7 @@ function validate(user, { t, error }) {
 }
 
 const LogInForm = reduxForm({
-  form: SIGN_UP_FORM,
+  form: LOG_IN_FORM,
   validate,
   persistentSubmitErrors: true,
   onSubmit(credentials, dispatch, { t }) {

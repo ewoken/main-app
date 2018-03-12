@@ -52,3 +52,15 @@
 .LogInComponent__passwordIcon {
   color: rgba(0, 0, 0, 0.25);
 }
+
+.ForgotPasswordComponent__emailIcon {
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.ResetPasswordComponent__emailIcon {
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.ResetPasswordComponent__passwordIcon {
+  color: rgba(0, 0, 0, 0.25);
+}

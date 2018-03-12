@@ -32,3 +32,18 @@ export function logOut() {
     method: 'POST',
   });
 }
+
+export function sendResetPasswordEmail(input) {
+  return fetchUserStore('/users/sendResetPasswordEmail', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
+export function resetPassword(input) {
+  return fetchUserStore('/users/resetPassword', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+resetPassword.INVALID_EXPIRED_TOKEN = 'INVALID_EXPIRED_TOKEN';

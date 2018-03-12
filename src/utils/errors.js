@@ -84,12 +84,9 @@ export function handleSubmitError(t, handler) {
     if (error instanceof ApiError) {
       console.error('API error', error); // eslint-disable-line no-console
     }
-    if (error instanceof DomainError) {
+    if (handler && error instanceof DomainError) {
       handler(error.toObject());
-    } else if (
-      error instanceof ValidationError ||
-      error instanceof ServerError
-    ) {
+    } else if (error instanceof ApiError) {
       throw new SubmissionError({
         _error: {
           message: t('Something goes wrong'),
